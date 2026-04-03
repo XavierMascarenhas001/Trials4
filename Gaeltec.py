@@ -1284,7 +1284,8 @@ for cat_name, keys, y_label in categories:
             Variation=('qcvi_clean', 'sum')
         ).reset_index()
 
-        drilldown_dict[cat_name] = sub_df.copy()
+        if cat_name != "CV31":
+            drilldown_dict[cat_name] = sub_df.copy()
 
     bar_data.rename(columns={'mapped':'Mapped'}, inplace=True)
     bar_data['PositiveVar'] = bar_data['Variation'].clip(lower=0)
@@ -1302,7 +1303,8 @@ for cat_name, keys, y_label in categories:
     bar_data_dict[cat_name] = bar_data
 
     # Add to drill-down dict
-    drilldown_dict[cat_name] = sub_df.copy()
+    if cat_name != "CV31":
+        drilldown_dict[cat_name] = sub_df.copy()
     st.subheader(f"🔹 {cat_name} — Total: {grand_total:,.2f}")
 
     # --- Plot bar chart only if there is data ---
@@ -1353,7 +1355,8 @@ for cat_name, keys, y_label in categories:
                 del st.session_state[f"selected_{cat_name}"]
                 st.rerun()
 
-            selected_rows = sub_df[sub_df['mapped'] == selected_mapping].copy()
+            selected_rows = drilldown_dict[cat_name]
+            selected_rows = selected_rows[selected_rows['mapped'] == selected_mapping].copy()
             selected_rows.columns = selected_rows.columns.str.strip().str.lower()
             display_columns = [
                 'shire', 'project', 'segmentcode', 'segmentdesc', 'comment',
