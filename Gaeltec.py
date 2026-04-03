@@ -1012,7 +1012,7 @@ selected_team, filtered_df = multiselect_filter(filtered_df, 'team_name', "Selec
 # -------------------------------
 # Convert any existing datetime column to just date (no hours/minutes/seconds)
 # Use the already prepared base_df (which respects the radio button)
-filtered_df = base_df.copy()
+filtered_df = filtered_df.copy()
 
 # Ensure datetouse_dt stays datetime (safety check)
 filtered_df['datetouse_dt'] = pd.to_datetime(
