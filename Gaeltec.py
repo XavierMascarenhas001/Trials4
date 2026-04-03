@@ -1262,18 +1262,21 @@ for cat_name, keys, y_label in categories:
             (~sub_df['pole'].isin(cv7_poles)) &
             (sub_df['pole'].notna())
         ].copy()
-
-        # --- Keep only unique poles ---
-        sub_df_unique_poles = cv31_filtered.drop_duplicates(subset=['pole'])
+        
+        cv31_unique = (
+            cv31_filtered
+            .sort_values(by='mapped')  # optional, controls which category "wins"
+            .drop_duplicates(subset='pole', keep='first')
+        )
 
         # --- Aggregate ---
-        bar_data = sub_df_unique_poles.groupby('mapped').agg(
+        bar_data = cv31_unique.groupby('mapped').agg(
             Total=('pole', 'count'),
             Variation=('qcvi_clean', 'sum')
         ).reset_index()
 
         # --- Drilldown matches filtered unique poles ---
-        drilldown_dict[cat_name] = sub_df_unique_poles.copy()
+        drilldown_dict[cat_name] = cv31_unique.copy()
 
     else:
         bar_data = sub_df.groupby('mapped').agg(
